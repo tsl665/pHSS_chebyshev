@@ -42,7 +42,7 @@ c	/////////////////////////////////////////////////////////////
 	integer j
 	real *8 z(n),w(n),deno
 
-	std_cheb_nodes(n-1,z,w)
+	call std_cheb_nodes(n-1,z,w)
 	deno = 0
 	do j = 1,n
 		y = y + w(j)*f(j)/(x - z(j))
@@ -65,6 +65,17 @@ c	generate n+1 Chebyshev nodes and weights in interval [a,b]
 c	/////////////////////////////////////////////////////////////
 	integer n
 	real *8 x(n+1), w(n+1)
+	integer j
+
+	call std_cheb_nodes(n,x,w)
+	do j = 1,n+1
+		x(j) = ((b-a)*x(j)+(b+a))/2
+	enddo
+
+	return
+
+	end
+
 
 
 
