@@ -1,12 +1,22 @@
-	subroutine cheb_interp2D(n,z,x,y,f)
+	subroutine cheb_interp2D(p,u,v,x,y)
 
-
-
-
+c	/////////////////////////////////////////////////////////////
+c	p:	(input; scalar) Number of pts using in interpolation on
+c		each dimension. i.e. it is the rank of the 
+c		approximation
+c	u,v:	(output; vector(p)) Basis vector of kernel function. i.e.
+c
+c		K(x,y) = /sigma_{l=1,..,p} u_l(x)*v_l(y)
+c
+c
+c	x,y: (input; scalar) 
+c	/////////////////////////////////////////////////////////////
 	integer n
-	real *8 x,y,z,f(n)
+	real *8 x,y,z,f(n),bdry(4)
 	integer j
 	
+
+
 
 	
 
@@ -42,7 +52,7 @@ c	/////////////////////////////////////////////////////////////
 	integer j
 	real *8 z(n),w(n),deno
 
-	call std_cheb_nodes(n-1,z,w)
+	call cheb_nodes(n-1,z,w)
 	deno = 0
 	do j = 1,n
 		y = y + w(j)*f(j)/(x - z(j))
