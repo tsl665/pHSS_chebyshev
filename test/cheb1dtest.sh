@@ -1,5 +1,5 @@
-cp ../src/cheb1D.f ../temp/cheb1D.f
-cp ../src/evaKer.f ../temp/evaKer.f
+cp ../src/cheb/cheb1D.f ../temp/cheb1D.f
+cp ../src/cheb/evaKer.f ../temp/evaKer.f
 
 cp prini.f ../temp/prini.f
 cp cheb1dtest.f ../temp/cheb1dtest.f
