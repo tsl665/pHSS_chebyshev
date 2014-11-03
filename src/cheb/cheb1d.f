@@ -1,4 +1,4 @@
-	subroutine cheb_interp1D(x,y,n,m,dm,p,U,VT,G,LDU,LDV,LDG)
+	subroutine cheb1d(x,y,n,m,dm,p,U,VT,G,LDU,LDV,LDG)
 c	/////////////////////////////////////////////////////////////
 c	n, m: Input. Scalar. Length of x and y
 c	x, y: Input. Vector of length n and m. Points where kernel is
@@ -35,14 +35,6 @@ c	/////////////////////////////////////////////////////////////
 	real *8 xcheb(p), ycheb(p),wx(p),wy(p)
 	real *8 xmax, ymax, xmin, ymin,denoX(n),denoY(m)
 
-c	xmin = minval(x)
-c	xmax = maxval(x)
-c	ymin = minval(y)
-c	ymax = maxval(y)
-c	xmin = 0
-c	xmax = 1
-c	ymin = 0
-c	ymax = 1
 c	Obtain p chebyshev nodes for x
 	call cheb_nodes(p-1,dm(1),dm(2),xcheb,wx)
 
