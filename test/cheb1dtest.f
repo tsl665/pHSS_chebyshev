@@ -14,8 +14,8 @@ c	print *, 'Enter n (Length of x)'
 c	read *, n
 c	print *, 'Enter m (Length of y)'
 c	read *, m
-	n = 1000
-	m = 1000
+	n = 10
+	m = 10
 	print *, 'Enter p (Rank of Approximation)'
 	read *, p
 
@@ -43,7 +43,7 @@ c	read *, m
 	
 	call prini(6,13)
 
-	dm = [-1,3,2,5]
+	dm = [-1,1,-1,1]
 	
 	
 	call RANDOM_SEED
@@ -63,9 +63,30 @@ c	Compute Approximation matrix Kapp = U*G*VT
 	call cheb1d(x,y,n,m,dm,p,U,VT,G,n,p,p)
 	Kapp = matmul(U,matmul(G,VT))
 
+c	call prin2('error = *',K-Kapp,n*m)
+
+c	call prin2('K = *',K,n*m)
+c	call prin2('Kapp = *',Kapp,n*m)
+c	call prin2('Matmul = *',matmul(U,matmul(G,VT)),1)
+
 	call materr(n,m,K,Kapp,error,errms)
+
+c	call prin2('U = *',U,p*n)
+	
+c	call prin2('VT = *',VT,m*p)
+
+c	call prin2('G = *',G,p*p)
+
 	call prin2('errmax = *',error,1)
 	call prin2('err_root-mean-square = *',errms,1)
+
+c	do i = 1,n
+c		do j = 1,m
+c			Kapp(i,j) = abs(kapp(i,j) - K(i,j))/K(i,j)
+c		enddo
+c	enddo
+
+c	call prin2('PW error = *',Kapp,n*m)
 
 
 	deallocate (x,y,K,G,U,VT,Kapp)

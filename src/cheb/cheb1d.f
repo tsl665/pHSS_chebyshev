@@ -33,7 +33,8 @@ c	/////////////////////////////////////////////////////////////
 	
 	integer i,j,k,l
 	real *8 xcheb(p), ycheb(p),wx(p),wy(p)
-	real *8 xmax, ymax, xmin, ymin,denoX(n),denoY(m)
+	real *8 denoX(n),denoY(m)	
+
 
 c	Obtain p chebyshev nodes for x
 	call cheb_nodes(p-1,dm(1),dm(2),xcheb,wx)
@@ -58,26 +59,7 @@ c	First, precompute the denominator in Barycentric Formula
 			U(i,k) = wx(k)/(x(i)-xcheb(k))/denoX(i)
 		enddo
 	enddo
-cc	Compute VT<D-d>
-cc	Precompute denominator
-c	do j = 1,m
-c		denoY(j) = 0
-c		do k = 1,p
-c			denoY(j) = denoY(j) + wy(k)/(y(j) - ycheb(k))
-c		enddo !k
-c	enddo !i
-c
-cc	call prin2('denoY = *',denoY, m)
-c	do j = 1,m
-c		do k = 1,p
-c			VT(k,j) = 0
-c			do l = 1,p
-c			VT(k,j) = VT(k,j)+G(k,l)*wy(j)/(y(j)-ycheb(l))
-c			enddo !l
-c			VT(k,j) = VT(k,j)/denoY(j)
-c		enddo !k
-c	enddo !j
-
+c	Compute VT
 c	Precompute denominator
 	do j = 1,m
 		denoY(j) = 0
@@ -91,20 +73,6 @@ c	Precompute denominator
 			VT(k,j) = wy(k)/(y(j)-ycheb(k))/denoY(j)
 		enddo
 	enddo
-
-c	call prin2('wx = *',wx,p)
-c	call prin2('wy = *',wy,p)
-
-c	call prin2('U = *',U,n*p)
-c	call prin2('G = *',G,p*p)
-c	call prin2('VT = *',VT,p*m)
-
-
-
-c	VT = matmul(G,VT)
-
-
-
 
 
 	return
@@ -147,11 +115,14 @@ c
 c	/////////////////////////////////////////////////////////////
 	implicit none
 
-	real *8 PI
-	parameter (PI = 3.141592653589793)
+	real *8 PI, done
 	integer n
 	real *8 x(n+1), w(n+1)
 	integer j,s
+
+	done = 1.0d0
+
+	PI = 4.d0*atan(done)
 	
 	do j = 1,n+1
 		x(j) = cos((j-1)*PI/n)
