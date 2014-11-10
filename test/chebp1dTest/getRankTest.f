@@ -1,23 +1,25 @@
-      implicit none
+      implicit real *8 (a-h,o-z)
+      implicit integer (i-n)
 
-      integer n,m,i,j,p
-
-      real *8, dimension (:), allocatable :: x,y,sigma,f_true
-      real *8, dimension (:), allocatable :: f_app,tempVec
-      real *8, dimension (:,:), allocatable :: K, U, G, VT, Kapp
-      real *8 error, dm(4), errorM, normf, normM,errms
+      real *8 dm(4)
+      real *8, dimension (:), allocatable :: x,y
+      real *8, dimension (:,:), allocatable :: K,Kapp,G,U,VT
+      
       integer AllocateStatus
+      n = 100
+      m = 100
+      print *, 'Enter dgts (Digits of Approximation)'
+      read *, dgts
+      
+      
+      call prini(6,13)
 
+      tol = 10**(-dgts)
+      dm = [-1,1,-1,1]
 
+      call getRank1(krank,tol,dm)
 
-c print *, 'Enter n (Length of x)'
-c read *, n
-c print *, 'Enter m (Length of y)'
-c read *, m
-      n = 10
-      m = 10
-      print *, 'Enter p (Rank of Approximation)'
-      read *, p
+      call prinf('krank = ',krank,1)
 
       allocate (x(n), stat = AllocateStatus)
       IF (AllocateStatus /= 0) stop "*** Not Enough Memory"
@@ -28,23 +30,17 @@ c read *, m
       allocate (K(n,m), stat = AllocateStatus)
       IF (AllocateStatus /= 0) stop "*** Not Enough Memory"
 
-      allocate (G(p,p), stat = AllocateStatus)
+      allocate (G(krank,krank), stat = AllocateStatus)
       IF (AllocateStatus /= 0) stop "*** Not Enough Memory"
 
-      allocate (U(n,p), stat = AllocateStatus)
+      allocate (U(n,krank), stat = AllocateStatus)
       IF (AllocateStatus /= 0) stop "*** Not Enough Memory"
 
-      allocate (VT(p,m), stat = AllocateStatus)
+      allocate (VT(krank,m), stat = AllocateStatus)
       IF (AllocateStatus /= 0) stop "*** Not Enough Memory"
 
       allocate (Kapp(n,m), stat = AllocateStatus)
       IF (AllocateStatus /= 0) stop "*** Not Enough Memory"
-
-  
-      call prini(6,13)
-
-      dm = [-1,1,-1,1]
-  
   
       call RANDOM_SEED
       call RANDOM_NUMBER(x)
@@ -60,36 +56,18 @@ c     Compute the original matrix
       call evaKer(K,x,y,n,m,n)
 
 c     Compute Approximation matrix Kapp = U*G*VT
-      call cheb1d(x,y,n,m,dm,p,U,VT,G,n,p,p)
+      call cheb1d(x,y,n,m,dm,krank,U,VT,G,n,krank,krank)
       Kapp = matmul(U,matmul(G,VT))
-
-c call prin2('error = *',K-Kapp,n*m)
-
-c call prin2('K = *',K,n*m)
-c call prin2('Kapp = *',Kapp,n*m)
-c call prin2('Matmul = *',matmul(U,matmul(G,VT)),1)
 
       call materr(n,m,K,Kapp,error,errms)
 
-c call prin2('U = *',U,p*n)
-  
-c call prin2('VT = *',VT,m*p)
-
-c call prin2('G = *',G,p*p)
 
       call prin2('errmax = *',error,1)
       call prin2('err_root-mean-square = *',errms,1)
-
-c do i = 1,n
-c   do j = 1,m
-c     Kapp(i,j) = abs(kapp(i,j) - K(i,j))/K(i,j)
-c   enddo
-c enddo
-
-c call prin2('PW error = *',Kapp,n*m)
 
 
       deallocate (x,y,K,G,U,VT,Kapp)
   
 
       end
+
