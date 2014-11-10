@@ -1,14 +1,19 @@
-      subroutine getRank1(krank,tol,dm)
+      subroutine getRank1(krank,tol,dm,n,INFO)
       implicit real *8 (a-h,o-z)
       implicit integer (i-n)
 
       real *8 dm(4)
 
       krank = 1
+      INFO = 0
       do
         call checkAprxErr1(errMax,krank,dm)
         if (errMax<tol) exit
         krank = krank * 2
+        if (krank > n) then
+          INFO = 1
+          exit
+        endif
       end do
 
       return

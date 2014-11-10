@@ -17,9 +17,13 @@
       tol = 10**(-dgts)
       dm = [-1,1,-1,1]
 
-      call getRank1(krank,tol,dm)
-
-      call prinf('krank = ',krank,1)
+      call getRank1(krank,tol,dm,n,INFO)
+      if (INFO == 0) then
+        call prinf('krank = ',krank,1)
+      else
+        print *, 'No need to approximate. Treat as dense matrix.'
+        stop
+      endif
 
       allocate (x(n), stat = AllocateStatus)
       IF (AllocateStatus /= 0) stop "*** Not Enough Memory"
